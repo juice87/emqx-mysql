@@ -18,7 +18,10 @@ on_message_publish(#message{from = emqx_sys} = Message, _State) ->
 	{ok, Message};
 on_message_publish(#message{flags = #{retain := true}} = Message, _State) ->
 	#message{id = Id, topic = Topic, payload = Payload, from = From} = Message,
-	emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), binary_to_list(Payload), timestamp()]),
+	Map = jsx:decode(Payload, [return_maps]),
+	Typestr = maps:get(<<"Type">>, Map),
+	emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), binary_to_list(Typestr), timestamp()]),
+	%%emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), binary_to_list(Payload), timestamp()]),
 	{ok, Message};
 on_message_publish(Message, _State) ->
 	{ok, Message}.
