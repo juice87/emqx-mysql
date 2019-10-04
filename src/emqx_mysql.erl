@@ -52,7 +52,7 @@ on_message_publish(#message{flags = #{retain := true}} = Message, _State) ->
 		Z_QDTEMPZ05 =  maps:get(<<"Z_QDTEMPZ05">>, MapData)
 		end,
 			
-	emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), binary_to_list(Typestr), timestamp()]),
+	emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), binary_to_list(Z_QDMLDCLSTIM), timestamp()]),
 	%%emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), binary_to_list(Payload), timestamp()]),
 	{ok, Message};
 on_message_publish(Message, _State) ->
