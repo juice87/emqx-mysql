@@ -20,7 +20,7 @@ on_message_publish(#message{flags = #{retain := true}} = Message, _State) ->
 	#message{id = Id, topic = Topic, payload = Payload, from = From} = Message,
 	Map = jsx:decode(Payload, [return_maps]),
 	Typestr = maps:get(<<"$type">>, Map),
-	if Typestr == "CycleData" ->
+	if binary_to_list（Typestr） == "CycleData" ->
 		EventTime = maps:get(<<"timestamp">>, Map),
 		ControllerId = maps:get(<<"controllerId">>, Map),
 		OpMode = maps:get(<<"opMode">>, Map),
