@@ -1,5 +1,6 @@
 -module(emqx_mysql).
 
+-import(string,[equal/2]). 
 -include("emqx_mysql.hrl").
 -include_lib("emqx/include/emqx.hrl").
 
@@ -20,7 +21,7 @@ on_message_publish(#message{flags = #{retain := true}} = Message, _State) ->
 	#message{id = Id, topic = Topic, payload = Payload, from = From} = Message,
 	Map = jsx:decode(Payload, [return_maps]),
 	Typestr = maps:get(<<"$type">>, Map),
-	if string:equal(binary_to_list（Typestr),"CycleData") ->
+	if equal(binary_to_list（Typestr),"CycleData") ->
 		EventTime = maps:get(<<"timestamp">>, Map),
 		ControllerId = maps:get(<<"controllerId">>, Map),
 		OpMode = maps:get(<<"opMode">>, Map),
