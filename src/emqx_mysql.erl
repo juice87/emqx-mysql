@@ -6,7 +6,7 @@
 
 -define(SAVE_MESSAGE_PUBLISH, <<"INSERT INTO mqtt_msg(`mid`, `client_id`, `topic`, `payload`, `time`) VALUE(?, ?, ?, ?, ?);">>).
 
--define(SAVE_CYCLEDATA,<<"INSERT INTO cycledata('client_id', 'receive_timestamp', 'controllerId', 'Z_QDVPPOS', 'Z_QDPRDCNT', 'Z_QDCOLTIM', 'Z_QDMAXPLSRPM', 'Z_QDCYCTIM', 'Z_QDINJTIM', 'Z_QDMLDCLSTIM', 'Z_QDTEMPZ01', 'Z_QDTEMPZ02', 'Z_QDTEMPZ03', 'Z_QDTEMPZ04', 'Z_QDTEMPZ05', 'Z_QDTEMPZ06', 'Z_QDNOZTEMP', 'Z_QDGODCNT', 'Z_QDHLDTIM', 'Z_QDBCKPRS', 'Z_QDMLDOPNENDPOS', 'Z_QDMAXINJSPD', 'Z_QDINJENDPOS', 'Z_QDPLSENDPOS', 'Z_QDMLDOPNTIM', 'Z_QDPLSTIM', 'Z_QDFLAG', 'EventTime') VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);">>).
+-define(SAVE_CYCLEDATA,<<"INSERT INTO cycledata(`client_id`, `receive_timestamp`, `controllerId`, `Z_QDVPPOS`, `Z_QDPRDCNT`, `Z_QDCOLTIM`, `Z_QDMAXPLSRPM`, `Z_QDCYCTIM`, `Z_QDINJTIM`, `Z_QDMLDCLSTIM`, `Z_QDTEMPZ01`, `Z_QDTEMPZ02`, `Z_QDTEMPZ03`, `Z_QDTEMPZ04`, `Z_QDTEMPZ05`, `Z_QDTEMPZ06`, `Z_QDNOZTEMP`, `Z_QDGODCNT`, `Z_QDHLDTIM`, `Z_QDBCKPRS`, `Z_QDMLDOPNENDPOS`, `Z_QDMAXINJSPD`, `Z_QDINJENDPOS`, `Z_QDPLSENDPOS`, `Z_QDMLDOPNTIM`, `Z_QDPLSTIM`, `Z_QDFLAG`, `EventTime`) VALUE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);">>).
 
 
 -export([load_hook/1, unload_hook/0, on_message_publish/2]).
