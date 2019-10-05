@@ -19,7 +19,7 @@ on_message_publish(#message{from = emqx_sys} = Message, _State) ->
 	{ok, Message};
 on_message_publish(#message{flags = #{retain := true}} = Message, _State) ->
 	#message{id = Id, topic = Topic, payload = Payload, from = From} = Message,
-	ROOTMAP = jsx:decode(list_to_binary(Payload), [return_maps]),
+	ROOTMAP = jsx:decode(Payload, [return_maps]),
 	Typestr = maps:get(<<"$type">>, ROOTMAP),
 	if Typestr == <<"CycleData">> ->
 		EventTime = maps:get(<<"timestamp">>, ROOTMAP),
