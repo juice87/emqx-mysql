@@ -6,8 +6,9 @@
 
 -define(SAVE_MESSAGE_PUBLISH, <<"INSERT INTO mqtt_msg(`mid`, `client_id`, `topic`, `payload`, `time`) VALUE(?, ?, ?, ?, ?);">>).
 
--export([load_hook/1, unload_hook/0, on_message_publish/2]).
+-define(SAVE_CYCLEDATA,<<"insert into cycledata('client_id', 'receive_timestamp', 'controllerId', 'Z_QDVPPOS', 'Z_QDPRDCNT', 'Z_QDCOLTIM', 'Z_QDMAXPLSRPM', 'Z_QDCYCTIM', 'Z_QDINJTIM', 'Z_QDMLDCLSTIM', 'Z_QDTEMPZ01', 'Z_QDTEMPZ02', 'Z_QDTEMPZ03', 'Z_QDTEMPZ04', 'Z_QDTEMPZ05', 'Z_QDTEMPZ06', 'Z_QDNOZTEMP', 'Z_QDGODCNT', 'Z_QDHLDTIM', 'Z_QDBCKPRS', 'Z_QDMLDOPNENDPOS', 'Z_QDMAXINJSPD', 'Z_QDINJENDPOS', 'Z_QDPLSENDPOS', 'Z_QDMLDOPNTIM', 'Z_QDPLSTIM', 'Z_QDFLAG', 'EventTime') value(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,);">>).
 
+-export([load_hook/1, unload_hook/0, on_message_publish/2]).
 
 load_hook(Env) ->
 	emqx:hook('message.publish', fun ?MODULE:on_message_publish/2, [Env]).
@@ -36,6 +37,7 @@ on_message_publish(#message{flags = #{retain := true}} = Message, _State) ->
 	Z_QDTEMPZ06 =  maps:get(<<"Z_QDTEMPZ06">>, MapData),
 	Z_QDTEMPZ01 =  maps:get(<<"Z_QDTEMPZ01">>, MapData),
 	Z_QDTEMPZ02 =  maps:get(<<"Z_QDTEMPZ02">>, MapData),
+	Z_QDTEMPZ04 =  maps:get(<<"Z_QDTEMPZ04">>, MapData),
 	Z_QDGODCNT =  maps:get(<<"Z_QDGODCNT">>, MapData),
 	Z_QDHLDTIM =  maps:get(<<"Z_QDHLDTIM">>, MapData),
 	Z_QDBCKPRS =  maps:get(<<"Z_QDBCKPRS">>, MapData),
