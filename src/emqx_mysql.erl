@@ -48,7 +48,9 @@ on_message_publish(#message{flags = #{retain := true}} = Message, _State) ->
 		Z_QDNOZTEMP =  maps:get(<<"Z_QDNOZTEMP">>, MapData),
 		Z_QDFLAG =  maps:get(<<"Z_QDFLAG">>, MapData),
 		Z_QDPLSTIM =  maps:get(<<"Z_QDPLSTIM">>, MapData),
-		Z_QDTEMPZ05 =  maps:get(<<"Z_QDTEMPZ05">>, MapData)
+		Z_QDTEMPZ05 =  maps:get(<<"Z_QDTEMPZ05">>, MapData);
+	true ->
+		true
 		end,
 			
 	emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), binary_to_list(Z_QDMLDCLSTIM), timestamp()]),
