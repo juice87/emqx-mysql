@@ -19,15 +19,13 @@ on_message_publish(#message{from = emqx_sys} = Message, _State) ->
 	{ok, Message};
 on_message_publish(#message{flags = #{retain := true}} = Message, _State) ->
 	#message{id = Id, topic = Topic, payload = Payload, from = From} = Message,
-	Map = jsx:decode(Payload, [return_maps]),
-	%%Typestr = maps:get(<<"\$type">>, Map),
-	%%if equal(binary_to_list（Typestr),"CycleData") ->
-		EventTime = maps:get(<<"timestamp">>, Map),
-		ControllerId = maps:get(<<"controllerId">>, Map),
-		OpMode = maps:get(<<"opMode">>, Map),
-		DataJsonStr = maps:get(<<"data">>, Map),
-		%% get data in json format
-		MapData = jsx:decode(DataJsonStr,[return_maps]),
+	ROOTMAP = jsx:decode(list_to_binary(Payload), [return_maps]),
+	Typestr = maps:get(<<"\$type">>, ROOTMAP),
+	if Typestr == <<"CycleData">> ->
+		EventTime = maps:get(<<"timestamp">>, ROOTMAP),
+		ControllerId = maps:get(<<"controllerId">>, ROOTMAP),
+		OpMode = maps:get(<<"opMode">>, ROOTMAP),
+		MapData = maps:get(<<"data">>, ROOTMAP),
 		Z_QDVPPOS =  maps:get(<<"Z_QDVPPOS">>, MapData),
 		Z_QDPRDCNT =  maps:get(<<"Z_QDPRDCNT">>, MapData),
 		Z_QDCOLTIM =  maps:get(<<"Z_QDCOLTIM">>, MapData),
@@ -50,8 +48,8 @@ on_message_publish(#message{flags = #{retain := true}} = Message, _State) ->
 		Z_QDNOZTEMP =  maps:get(<<"Z_QDNOZTEMP">>, MapData),
 		Z_QDFLAG =  maps:get(<<"Z_QDFLAG">>, MapData),
 		Z_QDPLSTIM =  maps:get(<<"Z_QDPLSTIM">>, MapData),
-		Z_QDTEMPZ05 =  maps:get(<<"Z_QDTEMPZ05">>, MapData),
-		%%end,
+		Z_QDTEMPZ05 =  maps:get(<<"Z_QDTEMPZ05">>, MapData)
+		end,
 			
 	emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), binary_to_list(Z_QDMLDCLSTIM), timestamp()]),
 	%%emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), binary_to_list(Payload), timestamp()]),
