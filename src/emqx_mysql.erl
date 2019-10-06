@@ -19,7 +19,7 @@ unload_hook() ->
 on_message_publish(#message{from = emqx_sys} = Message, _State) ->
 	{ok, Message};
 %%on_message_publish(#message{flags = #{retain := true}} = Message, _State) ->
-on_message_publish(#message{topic := "/cycledata"} = Message, _State) ->
+on_message_publish(#message{topic = <<"/cycledata">>} = Message, _State) ->
 	#message{id = Id, topic = Topic, payload = Payload, from = From} = Message,
 	ROOTMAP = jsx:decode(Payload, [return_maps]),
 	Typestr = maps:get(<<"$type">>, ROOTMAP),
