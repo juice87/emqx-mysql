@@ -8,6 +8,8 @@
 
 -define(SAVE_CYCLEDATA,<<"INSERT INTO cycledata(`client_id`, `receive_timestamp`, `controllerId`, `Z_QDVPPOS`, `Z_QDPRDCNT`, `Z_QDCOLTIM`, `Z_QDMAXPLSRPM`, `Z_QDCYCTIM`, `Z_QDINJTIM`, `Z_QDMLDCLSTIM`, `Z_QDTEMPZ01`, `Z_QDTEMPZ02`, `Z_QDTEMPZ03`, `Z_QDTEMPZ04`, `Z_QDTEMPZ05`, `Z_QDTEMPZ06`, `Z_QDNOZTEMP`, `Z_QDGODCNT`, `Z_QDHLDTIM`, `Z_QDBCKPRS`, `Z_QDMLDOPNENDPOS`, `Z_QDMAXINJSPD`, `Z_QDINJENDPOS`, `Z_QDPLSENDPOS`, `Z_QDMLDOPNTIM`, `Z_QDPLSTIM`, `Z_QDFLAG`, `EventTime`) VALUE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);">>).
 
+-define(SAVE_ALARM,<<"INSERT INTO alarm(`client_id`, `receive_timestamp`, `controllerId`,`alarmNum`,`value`,`EventTime`) value(?,?,?,?,?,?);">>).
+
 -export([load_hook/1, unload_hook/0, on_message_publish/2]).
 
 load_hook(Env) ->
@@ -57,6 +59,18 @@ on_message_publish(#message{topic = <<"/cycledata">>} = Message, _State) ->
 	%%emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), Z_QDMLDCLSTIM, timestamp()]),
 	%%emqx_mysql_cli:query(?SAVE_MESSAGE_PUBLISH, [emqx_guid:to_hexstr(Id), binary_to_list(From), binary_to_list(Topic), binary_to_list(Payload), timestamp()]),
 	{ok, Message};
+
+on_message_publish(#message{topic = <<"/alarm">>} = Message, _State) ->
+	#message{id = Id, topic = Topic, payload = Payload, from = From} = Message,
+	ROOTMAP = jsx:decode(Payload, [return_maps]),
+	EventTime = maps:get(<<"timestamp">>, ROOTMAP),
+	ControllerId = maps:get(<<"controllerId">>, ROOTMAP),
+	MapAlarm = maps:get(<<"alarm">>, ROOTMAP),
+	AlarmNum =  maps:get(<<"key">>, MapAlarm, 0),
+	AlarmValue = maps:get(<<"value">>, MapAlarm, 0),
+	emqx_mysql_cli:query(?SAVE_ALARM,[binary_to_list(From), timestamp(), ControllerId,AlarmNum,AlarmValue,EventTime]),
+	{ok, Message};
+
 on_message_publish(Message, _State) ->
 	{ok, Message}.
 
