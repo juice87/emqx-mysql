@@ -68,7 +68,7 @@ on_message_publish(#message{topic = <<"/alarm">>} = Message, _State) ->
 	MapAlarm = maps:get(<<"alarm">>, ROOTMAP),
 	AlarmNum =  maps:get(<<"key">>, MapAlarm, 0),
 	AlarmValue = maps:get(<<"value">>, MapAlarm, 0),
-	emqx_mysql_cli:query(?SAVE_ALARM,[binary_to_list(From), timestamp(), ControllerId,AlarmNum,AlarmValue,EventTime]),
+	emqx_mysql_cli:query(?SAVE_ALARM,[binary_to_list(From), timestamp(), ControllerId, AlarmNum, atom_to_list(AlarmValue), EventTime]),
 	{ok, Message};
 
 on_message_publish(Message, _State) ->
